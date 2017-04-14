@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        body {
+            padding: 0px;
+            margin: 0;
+            width: 100vh;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            background: #111;
+        }
+
+        input {
+            border: 0;
+            background: transparent;
+            color: white;
+            height: 20px;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        #console {
+            width: 100vw;
+            padding: 0 10px 0 10px;
+
+            color: white;
+        }
+    </style>
+</head>
+<body style="padding: 0; margin: 0; position: relative">
+<div id="console" style="">
+
+</div>
+
+
+<div style="color: white; padding-left: 10px;">
+    <span style="font-family: monospace; color: #55ff55; float: left">></span>
+    <input id='input' style="width: calc(100% - 20px); float:left" onkeydown="check(event, this);">
+</div>
+
+<script>
+    window.addEventListener("load", function () {
+        Console.input = document.getElementById('input');
+        Console.input.focus();
+        document.body.addEventListener("mouseover", function () {
+            Console.input.focus();
+        });
+        document.body.addEventListener("click", function () {
+            Console.input.focus();
+        })
+    });
+    var MQ;
+    var username = 'anonymous';
+    var color = "#fff";
+    var Console = {
+        handler: defaultHandler,
+        screen: document.getElementById("console"),
+        input: null,
+
+        writeLine: function (text) {
+            Console.screen.innerHTML += (text + "<br>");
+            document.body.scrollTop = document.body.scrollHeight;
+        },
+        setHandler: function (handler) {
+            Console.handler = handler;
+        },
+        restoreHandler: function () {
+            Console.handler = defaultHandler;
+        }
+    };
+
+    function connect(channel, callback) {
+        MQ = new IsoMQ("isogen.net:8000", channel);
+        MQ.onmessage = function (data) {
+            Console.writeLine(data);
+        };
+        MQ.onopen = callback;
+    }
+    function check(event, input) {
+
+        if (event.ctrlKey && event.key == "c") {
+            Console.restoreHandler();
+            Console.writeLine("Previous handler terminated.");
+        }
+        else if (event.key == "Enter") {
+            var commandline = input.value;
+            input.value = "";
+            Console.handler(commandline);
+        } else {
+
+        }
+    }
+
+    function defaultHandler(commandline) {
+        Console.writeLine(">" + commandline);
+        var args = commandline.split(" ");
+        switch (args[0]) {
+            case "help": {
+                Console.writeLine("Available commands are:<br>chat &lt;roomname&gt;");
+            }
+                break;
+
+            case "chat": {
+                chat(commandline)
+            }
+                break;
+
+            default:
+                Console.writeLine(args[0] + " is not recognized as a command.  Enter 'help' for help.");
+        }
+    }
+
+    function chat(commandline) {
+        var args = commandline.split(" ");
+        if (args.length == 2) {
+            Console.writeLine("Joining chatroom: " + args[1]);
+            connect(args[1], function () {
+                Console.writeLine("Connected! <br>Use '/name newname' to change how you appear. <br>Use '/color #000000' to change the color of your name.");
+            });
+        } else {
+            Console.writeLine("chat requires one argument");
+            Console.restoreHandler();
+            return;
+        }
+        var chatHandler = function (commandline) {
+            var args = commandline.split(" ");
+            switch (args[0]) {
+                case "/name":
+                    var old = username;
+                    username = args[1];
+                    MQ.send(old + " changed their name to: " + username);
+                    break;
+                case "/color":
+                    color = args[1];
+                    break;
+                case "exit":
+                    MQ.send("<span style='color: " + color + "'>" + username + "</span>" + " has left the chat room.");
+                    MQ.close();
+                    Console.writeLine("Exiting...");
+                    Console.restoreHandler();
+                    break;
+                default:
+                    MQ.send("[<span style='color: " + color + "'>" + username + "</span>" + "]: " + commandline);
+
+            }
+        }
+        Console.setHandler(chatHandler);
+    }
+
+    function IsoMQ(url, channel) {
+        var _this = this;
+        this.url = "wss://" + url + "/" + channel;
+        console.log(this.url);
+        this.socket = new WebSocket(this.url);
+        this.socket.onerror = this.onerror;
+        this.socket.onmessage = function (event) {
+            try {
+                var payload = JSON.parse(event.data);
+                _this.onmessage(payload);
+
+            } catch (e) {
+                _this.onerror(e);
+            }
+        };
+        this.socket.onopen = function () {
+            console.log("Connection opened");
+            _this.onopen();
+        }
+    }
+
+    IsoMQ.prototype.send = function (data) {
+        var payload = null;
+        try {
+            payload = JSON.stringify(data);
+        } catch (e) {
+            payload = JSON.stringify({data: new Blob(data)});
+        }
+        this.socket.send(payload);
+    };
+
+    IsoMQ.prototype.close = function () {
+        this.socket.close();
+    }
+
+</script>
