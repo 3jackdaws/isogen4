@@ -1,0 +1,53 @@
+.contains-image{
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.paddingless{
+    padding:0 !important;
+}
+
+a.footer-responsive{
+    display: block !important;
+    width: 100%;
+    font-size: 1em;
+    margin: 10px;
+}
+
+.cover-container{
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+}
+
+.cover-text{
+    color: white;
+    opacity: 0;
+    padding: 20px;
+    font-size: 2em;
+    position: absolute;
+    top: 40%;
+    margin: 0 auto;
+    text-align: center;
+    left: 0;
+    right: 0
+}
+
+.cover{
+    transition-property: filter;
+    transition-duration: 0.5s;
+    display: block !important;
+
+}
+
+
+
+.cover-container:hover .cover-text{
+    opacity: 1;
+}
+
+.cover-container:hover .cover{
+    filter: brightness(30%);
+}

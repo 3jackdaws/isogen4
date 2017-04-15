@@ -13,17 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import url
 from django.contrib import admin
-from isogen4 import views
-from django.contrib.staticfiles import views as sf
+from apps.api import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^projects/', include("apps.projects.urls")),
-    url(r'^api/', include("apps.api.urls")),
-    url(r'^admin/', admin.site.urls),
-
-
-
+    url(r'^feed/([0-9]+)', views.feed),
 ]
