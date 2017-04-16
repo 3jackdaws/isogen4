@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    {{ css_main | safe}}
+</head>
+<body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+<div class="ui grid" style="height: 100vh; background: whitesmoke">
+    <div class="container sixteen wide column" style="display: flex; justify-content: center; align-items: center">
+        <div class="ui card" style="padding: 5em 0 5em 0">
+            <div class="content" style="text-align: center">
+                <h1 class="title">Error: {{ status }}</h1>
+                <h3 class="">{{ message }}</h3>
+                <a class="" onclick="history.back()">Go Back</a>
+                <a class="" href="https://github.com/3jackdaws/isogen4/issues" style="position: absolute; bottom: -25px; left: 0; right: 0; margin: 0 auto; color: #aaa">Missing Link?</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{ js_main | safe }}
+</body>

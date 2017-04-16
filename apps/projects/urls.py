@@ -19,5 +19,5 @@ from apps.projects import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^terminal$', views.terminal),
+    url(r'^terminal/?$', views.terminal),
 ]

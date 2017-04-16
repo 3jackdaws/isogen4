@@ -20,9 +20,11 @@ from django.contrib.staticfiles import views as sf
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^projects/', include("apps.projects.urls")),
+    url(r'^portfolio/?$', views.portfolio),
+    url(r'^experiments/', include("apps.projects.urls")),
     url(r'^api/', include("apps.api.urls")),
     url(r'^admin/', admin.site.urls),
+    url(r'.', views.error(404, "That page was not found")),
 
 
 

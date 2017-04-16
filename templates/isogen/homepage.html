@@ -6,8 +6,10 @@
     {{ css_main | safe}}
 </head>
 <body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
 <div class="ui grid">
-    {% include 'components/navbar.html' %}
+
 
     <div class="contains-image column sixteen wide paddingless" style="background-image: url('/static/img/boats.jpg'); width: 100%;">
         <div class="" style="background-color: rgba(15,15,15,0.85);padding: 10em 0 10em 0">
@@ -21,7 +23,7 @@
                 </p>
 
                 <p style="color: #bbb">
-                    Have you already given us your email address? <a href="#" class="ui link" onclick="$('#login-dropdown').dropdown('show')">Sign In</a>
+                    Are we already selling your information? <a href="#" class="ui link" onclick="$('#login-dropdown').dropdown('show')">Sign In</a>
                 </p>
             </div>
         </div>
@@ -50,9 +52,7 @@
                 <button class="ui button inverted blue huge" >Second Chance to Buy our Product</button>
             </p>
         </div>
-        <div class="rss-feed">
 
-        </div>
     </div>
     <div class="column sixteen wide contains-image paddingless" style="background-image: url('/static/img/pen.jpg');  padding: 7em 0 7em 0;">
         <div class="" style="background: rgba(255,255,255, 0.8); height: 100%;padding: 10em 0 10em 0; box-shadow: 0 4px 10px rgba(0,0,0,0.8) inset;">
@@ -96,7 +96,7 @@
         </div>
         <br>
         <p>
-            <span>&copy; Copyright notice that is not actually required by law to invoke copyright</span>
+            <span>&copy; Professional looking copyright notice</span>
         </p>
 
     </footer>
@@ -104,11 +104,9 @@
 
 </body>
 {{ js_main | safe}}
-<script src="/static/js/feed.js"></script>
 <script>
     window.addEventListener("load", function () {
-        Feed.init();
-    })
-</script>
 
+    });
+</script>
 </html>
