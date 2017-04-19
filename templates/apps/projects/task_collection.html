@@ -17,6 +17,7 @@
         <a class="item" href="#task{{ task.id }}">{{ task.name }}</a>
     {% endfor %}
 </div>
+{% if collection %}
 {% for task in collection.tasks.all %}
     <div class="ui one columns middle aligned very relaxed stackable grid" style="margin-top: 70px;">
         <div class="ui column">
@@ -60,7 +61,27 @@
         </div>
     </div>
 {%  endfor %}
-
+{% else %}
+    <div class="ui one columns middle aligned very relaxed stackable grid" style="margin-top: 70px;">
+        <div class="ui column">
+            <div class="ui container text centered">
+                <div class="ui segment piled very padded">
+                    <h2 style="text-align: center;">Enter your Collection identifier</h2>
+                    <form class="ui form" method="get" onsubmit="event.preventDefault()" style="text-align: center;max-width: 400px; margin: auto">
+                        <div class="two fields">
+                            <div class="field twelve wide">
+                                <input id="ident" placeholder="Collection ID">
+                            </div>
+                            <div class="field four wide">
+                                <button class="ui button black" onclick="window.location='/api/tasks/'+ document.getElementById('ident').value">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 </body>
 {{ js_main | safe}}

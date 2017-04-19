@@ -22,6 +22,7 @@ def feed(request:HttpRequest, num):
 def task_collection(request, identifier):
     print(identifier)
     completion = None
+    collection = None
     if request.GET:
         print("get was set")
         task_id = request.GET.get('task-id')
@@ -35,11 +36,11 @@ def task_collection(request, identifier):
             task.save()
 
             print("added completion")
+    if identifier:
+        try:
+            collection = TaskCollection.objects.get(identifier=identifier)
+        except Exception as e:
+            print(e)
+            return error(404, "Task collection not found.")(request)
 
-    try:
-        collection = TaskCollection.objects.get(identifier=identifier)
-        return render(request, 'apps/projects/task_collection.html', {"collection":collection})
-    except Exception as e:
-        print(e)
-        return error(404, "Task collection not found.")(request)
-
+    return render(request, 'apps/projects/task_collection.html', {"collection": collection})

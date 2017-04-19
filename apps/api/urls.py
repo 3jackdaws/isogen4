@@ -20,5 +20,5 @@ from apps.api import views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^feed/([0-9]+)', views.feed),
-    url(r'^tasks/([a-z0-9]+)', views.task_collection),
+    url(r'^tasks/([a-z0-9]+)?', views.task_collection),
 ]
