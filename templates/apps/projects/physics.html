@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    {{ css_main | safe}}
+</head>
+<body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+<div class="ui one columns middle aligned very relaxed stackable grid" style="margin-top: 70px;">
+
+    <div class="ui column" style="margin: 50px">
+        <div class="ui segment piled ">
+            <h2>Coulomb's Law: </h2>
+
+            <form class="ui form coloumbs-law" onsubmit="event.preventDefault()">
+                <div class="ui two columns middle aligned grid">
+                    <div class="ui column">
+                        <div class=" two fields">
+                            <div class="field eight wide ">
+                                <div class="ui right labeled input">
+                                    <input name="force" title="force" placeholder="Force">
+                                    <div class="ui basic label">
+                                        N
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="field eight wide" style="text-align: center;" >
+                                <span onclick="calcColoumbsLaw()" class="ui button tiny" style="font-size: 2em; padding: 5px 15px; margin: auto" data-tooltip="Calculate">=</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui column ">
+                        <div class="three fields">
+                            <div class="field two wide">
+                                <h1>K</h1>
+                            </div>
+                            <div class="field seven wide">
+                                <div class="ui right labeled input">
+                                    <input name="q1" placeholder="charge 1">
+                                    <div class="ui basic label">
+                                        C
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field seven wide">
+                                <div class="ui right labeled input">
+                                    <input name="q2" placeholder="charge 2">
+                                    <div class="ui basic label">
+                                        C
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row" style="border-top: 1px solid grey; padding-top: 10px">
+                            <div class="field">
+                                <div class="ui right labeled input">
+                                    <input name="dist" placeholder="Distance">
+                                    <div class="ui basic label">
+                                        M
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+{{ js_main | safe}}
+<script>
+    window.addEventListener("load", function () {
+
+    });
+
+    const K = 8.99 * Math.pow(10, 9);
+
+
+    function calcColoumbsLaw(){
+        var form = $('.form.coloumbs-law')[0];
+        var force = form['force'];
+        var q1 = form['q1'];
+        var q2 = form['q2'];
+        var dist = form['dist'];
+
+        if(!force.value){
+            force.value = ((K * parseFloat(q1.value) * parseFloat(q2.value) ) / Math.pow(parseFloat(dist.value), 2)).toExponential();
+        }
+
+    }
+</script>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100vh;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            background: #111;
+        }
+
+        input {
+            border: 0;
+            background: transparent;
+            color: white;
+            height: 20px;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        #console {
+            width: 100vw;
+            padding: 0 10px 0 10px;
+
+            color: white;
+        }
+    </style>
+</head>
+<body style="padding: 0; margin: 0; position: relative">
+<div style="">
+    <pre id="console" style="margin: 0;"></pre>
+</div>
+
+
+<div style="color: white; padding-left: 10px;">
+    <span style="font-family: monospace; color: #55ff55; float: left">></span>
+    <input id='input' style="width: calc(100% - 20px); float:left" onkeypress="puts(event, this);">
+</div>
+<script src="/static/js/apps/terminal.js"></script>
+<script src="/static/js/apps/IsoMQ.js"></script>
+<script>
+    window.addEventListener("load", function () {
+        Terminal.input = document.getElementById('input');
+        Terminal.input.focus();
+        document.body.addEventListener("mouseover", function () {
+            Terminal.input.focus();
+        });
+        document.body.addEventListener("click", function () {
+            Terminal.input.focus();
+        })
+    });
+    function puts(event, input){
+        if(event.key == 'c' && event.ctrlKey){
+            Terminal.endRunningProcess();
+        }
+        else if(event.key == 'Enter'){
+            Terminal.exec();
+        }
+        else console.log(event);
+    }
+</script>

@@ -21,42 +21,12 @@
 {% for task in collection.tasks.all %}
     <div class="ui one columns middle aligned very relaxed stackable grid" style="margin-top: 70px;">
         <div class="ui column">
-
             <div class="ui container text centered">
                 {% if task.get_type_name == 'Rotating' %}
-                    <div class="ui segment piled " id="task{{ task.id }}">
-                        <form class="ui form" method="get" action="" style="text-align: center;max-width: 400px; margin: auto">
-                            <h1>{{ task.name }}</h1>
-                            <h3>{{ task.description }}</h3>
-                            <div class="two fields">
-                                <div class="field">
-                                    <select name="actor" class="ui search dropdown">
-                                        <option value="">Select Person</option>
-                                        {% for actor in task.members.all %}
-                                            <option value="{{ actor }}">{{ actor }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <button class="ui button black">Complete Task</button>
-                                </div>
-                            </div>
-                            <input name="task-id" type="hidden" value="{{ task.id }}">
-                        </form>
-                    </div>
-                    <h1>Most Recent</h1>
-                    <div class="ui relaxed divided list">
-                    {% for completion in task.last_ten_completions %}
-                        <div class="item">
-                            <div class="content">
-                                <a class="header">{{ completion.actor }}</a>
-                                <div class="description">Completed on {{ completion.time }}</div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    </div>
+                {% include 'apps/task/type/rotating.html' %}
+                {% elif task.get_type_name == 'Periodic' %}
+                {% include 'apps/task/type/periodic.html' %}
                 {% endif %}
-
             </div>
         </div>
     </div>

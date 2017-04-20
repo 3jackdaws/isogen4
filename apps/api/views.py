@@ -43,4 +43,4 @@ def task_collection(request, identifier):
             print(e)
             return error(404, "Task collection not found.")(request)
 
-    return render(request, 'apps/projects/task_collection.html', {"collection": collection})
+    return render(request, 'apps/task/task_collection.html', {"collection": collection})

@@ -1,0 +1,31 @@
+<div class="ui segment piled " id="task{{ task.id }}">
+    <form class="ui form" method="get" action="" style="text-align: center;max-width: 400px; margin: auto">
+        <h1>{{ task.name }}</h1>
+        <h3>{{ task.description }}</h3>
+        <div class="two fields">
+            <div class="field">
+                <select name="actor" class="ui search dropdown">
+                    <option value="">Select Person</option>
+                    {% for actor in task.members.all %}
+                    <option value="{{ actor }}">{{ actor }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <button class="ui button black">Complete Task</button>
+            </div>
+        </div>
+        <input name="task-id" type="hidden" value="{{ task.id }}">
+    </form>
+</div>
+<h1>Most Recent</h1>
+<div class="ui relaxed divided list">
+    {% for completion in task.last_ten_completions %}
+    <div class="item">
+        <div class="content">
+            <a class="header">{{ completion.actor }}</a>
+            <div class="description">Completed on {{ completion.time }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

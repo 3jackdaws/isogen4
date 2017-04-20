@@ -9,4 +9,9 @@ def index(request:HttpRequest):
 
 def terminal(request:HttpRequest):
     context = {}
-    return render(request, "apps/projects/terminal.html", context)
+    return render(request, "apps/projects/terminal2.html", context)
+
+
+
+def physics(request: HttpRequest):
+    return render(request, 'apps/projects/physics.html')
