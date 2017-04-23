@@ -14,13 +14,13 @@
     <div class="ui column">
         <div class="ui container text centered" style="text-align: center">
             <div class="ui segment piled very padded" id="phone-inputs">
-                <h2 style="text-align: center;">Enter artist , song name or both</h2>
+                <h2 style="text-align: center;">Enter URL of Sound</h2>
                 <form class="ui form" onsubmit="event.preventDefault()"
                       style="text-align: center;max-width: 400px; margin: auto">
 
                     <div class="field icon fluid">
-                        <label>Song URL</label>
-                        <input id="sc-url" type="text" name="url" style="text-align: center" oninput="resolve()">
+                        <label>SoundCloud Song Page URL</label>
+                        <input id="sc-url" type="text" name="url" style="text-align: center" oninput="resolve()" placeholder="https://soundcloud.com/user/song-name">
                     </div>
 
 
