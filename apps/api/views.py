@@ -6,8 +6,9 @@ import xmltodict
 import json
 from .models import TaskCompletion, Task, TaskCollection, Actor
 from isogen4.views import error
-from isogen4.util import send_file
+from isogen4.util import send_file, stream_resource
 import apps.api.modules.sc as soundcloud
+import mutagen
 
 def index(request:HttpRequest):
     context = {}
@@ -59,6 +60,21 @@ def sc_info(request):
 
     return JsonResponse({'error'}, json_dumps_params={'indent':2})
 
+# def sc_download(request):
+#     if request.GET:
+#         url = request.GET.get('url')
+#         if url:
+#             track = soundcloud.resolve(url)
+#             stream = soundcloud.get_stream_as_resource(track)
+#             filename = track['title'] + ".mp3"
+#
+#             return stream_resource(stream, filename)
+#
+#     return JsonResponse({'error'}, json_dumps_params={'indent':2})
+
+
+
+
 def sc_download(request):
     if request.GET:
         url = request.GET.get('url')
@@ -66,8 +82,15 @@ def sc_download(request):
             track = soundcloud.resolve(url)
             stream = soundcloud.get_stream_as_resource(track)
             filename = "/tmp/" + track['title'] + ".mp3"
-            file = open(filename, "wb+")
-            file.write(stream.read())
+            with open(filename, "wb+") as file:
+                file.write(stream.read())
+                file.close()
+
+            audio = mutagen.File(filename)
+            audio.add_tags()
+            audio = soundcloud.set_artist_title(audio, track['user']['username'], track['title'])
+            audio = soundcloud.embed_artwork(audio, soundcloud.get_300px_album_art(track))
+            audio.save(filename, v1=2)
             return send_file(request, filename)
 
     return JsonResponse({'error'}, json_dumps_params={'indent':2})

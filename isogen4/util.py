@@ -73,3 +73,11 @@ def send_file(request, filename):
     response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
     print("sending dl")
     return response
+
+def stream_resource(resource, name):
+    wrapper = FileWrapper(resource)
+    response = HttpResponse(wrapper, content_type='X-DOWNLOAD')
+    # response['Content-Length'] = size
+    response['Content-Disposition'] = 'attachment; filename=%s' % name
+    print("sending dl2")
+    return response
