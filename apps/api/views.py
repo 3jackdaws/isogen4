@@ -49,7 +49,7 @@ def task_collection(request, identifier):
 def sc_info(request):
     if request.GET:
         url = request.GET.get('url')
-        if url:
+        if url and "soundcloud.com" in url:
             track = soundcloud.resolve(url)
             response = {}
             response['title'] = track['title']
