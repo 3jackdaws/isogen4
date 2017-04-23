@@ -6,6 +6,8 @@ import xmltodict
 import json
 from .models import TaskCompletion, Task, TaskCollection, Actor
 from isogen4.views import error
+from isogen4.util import send_file
+import apps.api.modules.sc as soundcloud
 
 def index(request:HttpRequest):
     context = {}
@@ -20,22 +22,20 @@ def feed(request:HttpRequest, num):
 
 
 def task_collection(request, identifier):
-    print(identifier)
     completion = None
     collection = None
     if request.GET:
-        print("get was set")
         task_id = request.GET.get('task-id')
         actor = request.GET.get('actor')
-        actor = Actor.objects.get(name=actor)
-        task = Task.objects.get(id=task_id)
-        if task and actor:
-            task_completion = TaskCompletion(actor=actor)
-            task_completion.save()
-            task.completions.add(task_completion)
-            task.save()
+        if task_id and actor:
+            actor = Actor.objects.get(name=actor)
+            task = Task.objects.get(id=task_id)
+            if task and actor:
+                task_completion = TaskCompletion(actor=actor)
+                task_completion.save()
+                task.completions.add(task_completion)
+                task.save()
 
-            print("added completion")
     if identifier:
         try:
             collection = TaskCollection.objects.get(identifier=identifier)
@@ -44,3 +44,30 @@ def task_collection(request, identifier):
             return error(404, "Task collection not found.")(request)
 
     return render(request, 'apps/task/task_collection.html', {"collection": collection})
+
+
+def sc_info(request):
+    if request.GET:
+        url = request.GET.get('url')
+        if url:
+            track = soundcloud.resolve(url)
+            response = {}
+            response['title'] = track['title']
+            response['artwork'] = track['artwork_url']
+            response['description'] = track['description']
+            return JsonResponse(track)
+
+    return JsonResponse({'error'}, json_dumps_params={'indent':2})
+
+def sc_download(request):
+    if request.GET:
+        url = request.GET.get('url')
+        if url:
+            track = soundcloud.resolve(url)
+            stream = soundcloud.get_stream_as_resource(track)
+            filename = "/tmp/" + track['title'] + ".mp3"
+            file = open(filename, "wb+")
+            file.write(stream.read())
+            return send_file(request, filename)
+
+    return JsonResponse({'error'}, json_dumps_params={'indent':2})

@@ -2,6 +2,9 @@ import threading
 import time
 from isogen4.models import Log
 from django.http.request import HttpRequest
+from django.http.response import HttpResponse
+from wsgiref.util import FileWrapper
+import os
 
 def snippets(request):
     main_stylesheets = """
@@ -55,3 +58,18 @@ def view_metrics_middleware(get_response):
         return response
 
     return middleware
+
+
+
+def send_file(request, filename):
+    """
+    Send a file through Django without loading the whole file into
+    memory at once. The FileWrapper will turn the file object into an
+    iterator for chunks of 8KB.
+    """
+    wrapper = FileWrapper(open(filename, "rb"))
+    response = HttpResponse(wrapper, content_type='X-DOWNLOAD')
+    response['Content-Length'] = os.path.getsize(filename)
+    response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(filename)
+    print("sending dl")
+    return response

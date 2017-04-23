@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Soundcloud Downloader</title>
+    {{ css_main | safe }}
+</head>
+<body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+
+
+<div class="ui one columns middle aligned very relaxed stackable divided grid" style="margin-top: 70px;">
+    <div class="ui column">
+        <div class="ui container text centered" style="text-align: center">
+            <div class="ui segment piled very padded" id="phone-inputs">
+                <h2 style="text-align: center;">Enter artist , song name or both</h2>
+                <form class="ui form" onsubmit="event.preventDefault()"
+                      style="text-align: center;max-width: 400px; margin: auto">
+
+                    <div class="field icon fluid">
+                        <label>Song URL</label>
+                        <input id="sc-url" type="text" name="url" style="text-align: center" oninput="resolve()">
+                    </div>
+
+
+                    <div class="ui two buttons fluid">
+                        <button class="ui button grey icon " data-tooltip="Not yet available" data-inverted=""
+                                data-position="bottom center">The entire discography <i class="icon book"></i></button>
+                        <button class="ui button orange icon" onclick="getFile(this)">Just the Song <i
+                                class="icon music"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="ui item segment" id="song-info" style="text-align: justify; visibility: hidden">
+                <div class="ui items" style="margin: 0">
+                    <div class="item">
+                        <div class="image">
+                            <img src="">
+                        </div>
+                        <div class="content">
+                            <a class="header"></a>
+                            <div class="meta">
+
+                            </div>
+                            <div class="description">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="ui inverted dimmer">
+                    <div class="ui loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+{{ js_main | safe }}
+<script>
+    window.addEventListener("load", function () {
+        $('.ui.sticky').sticky({
+            context: $('.pusher')[0]
+        });
+
+
+    });
+
+    function resolve() {
+        var input = document.getElementById('sc-url');
+        var url = input.value;
+        if (url.includes('soundcloud.com')) {
+            $('#song-info')[0].style.visibility = "visible";
+            $('#song-info .dimmer').addClass("active");
+            $.get("/api/soundcloud/info/?url=" + url, function (data) {
+                console.log(data);
+                $('#song-info .header')[0].innerHTML = (data.title);
+                $('#song-info .description')[0].innerHTML = (data.description);
+                $('#song-info img')[0].setAttribute("src", data.artwork_url);
+                $('#song-info .dimmer').removeClass("active");
+            })
+        }
+
+    }
+
+    function getFile(button) {
+        button.classList.add("loading");
+        var input = document.getElementById('sc-url');
+        var url = input.value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "/api/soundcloud/?url=" + url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+            if (this.status === 200) {
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+                var type = xhr.getResponseHeader('Content-Type');
+
+                var blob = new Blob([this.response], {type: type});
+                if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                    // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                    window.navigator.msSaveBlob(blob, filename);
+                } else {
+                    var URL = window.URL || window.webkitURL;
+                    var downloadUrl = URL.createObjectURL(blob);
+
+                    if (filename) {
+                        // use HTML5 a[download] attribute to specify filename
+                        var a = document.createElement("a");
+                        // safari doesn't support this yet
+                        if (typeof a.download === 'undefined') {
+                            window.location = downloadUrl;
+                        } else {
+                            a.href = downloadUrl;
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                        }
+                    } else {
+                        window.location = downloadUrl;
+                    }
+                    button.classList.remove("loading");
+                    setTimeout(function () {
+                        URL.revokeObjectURL(downloadUrl);
+                    }, 100); // cleanup
+                }
+            }
+        };
+        xhr.send();
+    }
+</script>

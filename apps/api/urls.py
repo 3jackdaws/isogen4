@@ -21,4 +21,7 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^feed/([0-9]+)', views.feed),
     url(r'^tasks/([a-z0-9]+)?', views.task_collection),
+    url(r'^soundcloud/info/?', views.sc_info),
+    url(r'^soundcloud/?', views.sc_download),
+
 ]

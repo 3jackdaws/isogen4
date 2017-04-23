@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^terminal/?$', views.terminal),
     url(r'^physics/?$', views.physics),
+    url(r'^bad-design/?$', views.bad_design),
+    url(r'^soundcloud/?$', views.soundcloud),
 ]

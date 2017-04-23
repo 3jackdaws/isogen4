@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bad Design</title>
+    {{ css_main | safe}}
+</head>
+<body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+<div class="ui left fixed vertical menu" style="margin-top: 50px;">
+    <div class="item header">
+        <i class="icon book"></i>
+        On This Page
+    </div>
+    <a class="item" href="#phone-inputs">Phone Inputs</a>
+</div>
+
+    <div class="ui one columns middle aligned very relaxed stackable divided grid" style="margin-top: 70px;">
+        <div class="ui column">
+            <div class="ui container text centered" style="text-align: center">
+                <h1>A Collection of Intentionally Bad Site Components</h1>
+                <h3>&middot; &middot; &middot;</h3>
+
+                <div class="ui segment piled very padded" id="phone-inputs">
+                    <h2 style="text-align: center;">Enter your phone number</h2>
+                    <form class="ui form" onsubmit="event.preventDefault()" style="text-align: center;max-width: 400px; margin: auto">
+                        <div class="field icon">
+                            <input readonly id="adj" type="tel" placeholder="Collection ID" value="555-555-5555" style="text-align: center">
+                            <div class="ui success message">
+                                <div class="header">Thanks!</div>
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="four buttons sixteen wide">
+                            <button class="ui button black icon" onclick="adjustNumber('up')">More <i class="icon plus"></i> </button>
+                            <button class="ui button black icon" onclick="adjustNumber('down')">Less <i class="icon minus"></i></button>
+                            <button class="ui button green" onclick="submitNumber(this)">Submit</button>
+                            <button class="ui button red" onclick="resetAdjust()">Restart</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="ui section divider" style="margin: 7em 0"></div>
+
+                <div class="ui segment piled very padded">
+                    <h2 style="text-align: center;">Enter your phone number</h2>
+                    <form class="ui form" onsubmit="event.preventDefault()" style="text-align: center;max-width: 400px; margin: auto">
+                        <div class="one fields sixteen wide">
+                           <div class="field sixteen wide">
+                                <input class="display" value="000-000-0000" readonly style="text-align: center">
+                                <input type='range' value="00000000000" min="0000000000" max="9999999999" oninput="changeVal(event)" style="width: 100%;">
+                            </div>
+                        </div>
+                        <div class="ui success message">
+                            <div class="header">Thanks!</div>
+                            <p></p>
+                        </div>
+                        <div class="one buttons sixteen wide">
+                            <button class="ui button green" onclick="submitNumber(this)">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+{{ js_main | safe}}
+<script>
+    window.addEventListener("load", function () {
+        $('.ui.sticky').sticky({
+            context:$('.pusher')[0]
+        });
+
+
+
+    });
+    function changeVal(event) {
+        var input = event.target;
+        var display = input.parentNode.querySelector('.display');
+        display.value = lpad(input.value, 10).replace(/(.{3})(.{3})(.{4})/, '$1-$2-$3');
+
+    }
+
+    function lpad(value, padding) {
+        var zeroes = new Array(padding+1).join("0");
+        return (zeroes + value).slice(-padding);
+    }
+
+    var incremement = 2500000000;
+    function adjustNumber(direction) {
+        var input = document.getElementById('adj');
+        var val = input.value.replace(/-/g, "");
+        var current = parseInt(val);
+        if(direction == "up"){
+            current += incremement;
+        }else{
+            current -= incremement;
+        }
+        input.value = Math.round(current).toString().replace(/(.{3})(.{3})(.{4})/, '$1-$2-$3');
+        incremement = Math.round(incremement/2);
+    }
+
+    function resetAdjust(){
+        incremement = 2500000000;
+        var input = document.getElementById('adj')
+        input.value = "555-555-5555";
+        input.parentNode.parentNode.classList.remove('success');
+
+    }
+
+    function submitNumber(button){
+        button.parentNode.parentNode.classList.add('success');
+    }
+
+
+</script>
+</html>
