@@ -2,21 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <title></title>
     {{ css_main | safe}}
 </head>
 <body>
 {% include 'components/navbar.html' %}
 {% include 'components/sidebar.html' %}
-<div class="ui left fixed vertical menu" style="margin-top: 50px;">
-    <div class="item header">
-        <i class="icon book"></i>
-        On This Page
-    </div>
-    {% for task in collection.tasks.all %}
-        <a class="item" href="#task{{ task.id }}">{{ task.name }}</a>
-    {% endfor %}
-</div>
+{#<div class="ui left fixed vertical menu" style="margin-top: 50px;">#}
+{#    <div class="item header">#}
+{#        <i class="icon book"></i>#}
+{#        On This Page#}
+{#    </div>#}
+{#    {% for task in collection.tasks.all %}#}
+{#        <a class="item" href="#task{{ task.id }}">{{ task.name }}</a>#}
+{#    {% endfor %}#}
+{#</div>#}
 {% if collection %}
 {% for task in collection.tasks.all %}
     <div class="ui one columns middle aligned very relaxed stackable grid" style="margin-top: 70px;">

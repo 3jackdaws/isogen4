@@ -55,11 +55,12 @@ a.footer-responsive{
 
 
 #search-input:focus, #search-input.expanded{
-    width: 200px;
+    width: 250px;
     outline: none;
     border-color: transparent !important;
     background-color: #444;
     color: #eee;
+
 }
 
 #search-input{
@@ -68,6 +69,8 @@ a.footer-responsive{
     transition-duration: 0.2s;
     background-color: #333;
     color: #888;
+    text-align: center;
+    padding: 6px !important;
 }
 
 
@@ -101,4 +104,12 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50rem;
     height: 1em;
     width: 1em;
+}
+
+.accordion > .item{
+    padding: 0 !important;
+}
+
+.accordion .header{
+    padding: 1em 1em !important;
 }

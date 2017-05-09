@@ -2,12 +2,14 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 import json
 import mutagen
+import os
 
 
 API_BASE = "https://api.soundcloud.com"
 CLIENT_ID = "3565524c74b5001489385a411137f6e2"
 CLIENT_SECRET = "b86833932d85229693af65801073fa67"
 
+DOWNLOAD_DIR = "/tmp/"
 
 def form_request(base_url, **kwargs):
     params = dict(kwargs, client_id=CLIENT_ID)
@@ -67,3 +69,23 @@ def set_artist_title(audio:mutagen.File, artist, title):
     frame.append(artist)
     audio.tags.add(frame)
     return audio
+
+
+def file_from_track(track):
+    filename = DOWNLOAD_DIR + track['title'] + ".mp3"
+    print("Attempt fetch: {}".format(filename))
+    if not os.path.exists(filename):
+        print("File not found: get resource")
+        stream = get_stream_as_resource(track)
+        print("Write file")
+        with open(filename, "wb+") as file:
+            file.write(stream.read())
+            file.close()
+        print("Open file for tag writing")
+        audio = mutagen.File(filename)
+        audio.add_tags()
+        audio = set_artist_title(audio, track['user']['username'], track['title'])
+        audio = embed_artwork(audio, get_300px_album_art(track))
+        audio.save(filename, v1=2)
+        print("saved file")
+    return filename

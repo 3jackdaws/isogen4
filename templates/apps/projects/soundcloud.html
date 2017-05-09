@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <meta charset="UTF-8">
     <title>Soundcloud Downloader</title>
     {{ css_main | safe }}
@@ -75,6 +76,9 @@
                             <div class="description">
                             </div>
 
+                            <div class="plays">
+                                <span class="header">Plays</span><span class="plays"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,6 +150,7 @@
 
                 if (this.status === 200) {
                     $('#progress .convert').addClass('completed');
+                    $('#progress .convert').removeClass('active');
                     $('#progress .write').addClass('active');
                     var filename = "";
                     var disposition = xhr.getResponseHeader('Content-Disposition');

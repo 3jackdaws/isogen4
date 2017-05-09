@@ -1,26 +1,32 @@
-<div class="computer tablet only row">
-    <div class="ui inverted fixed menu navbar">
+
+    <div class="ui inverted fixed main menu navbar" style="background: url('/static/img/sbar-noise2.png')">
         <div class="ui container">
-            <div class="ui dropdown item nav borderless" onclick="$('.ui.sidebar').sidebar('toggle')">ISOGEN
-                <div class="menu">
-
-                </div>
-            </div>
-            <div class="item borderless">
-                <div class="ui input action">
-                    <input id="search-input" class="ui icon input" type="text" placeholder="Search..." onkeypress="if(event.key == 'Enter') search()" oninput="toggleSearch(event)">
-                    <button class="ui button icon dark" onclick="search()"><i class="icon search"></i></button>
-                </div>
-            </div>
-
-            <a class="ui item right borderless" onclick="$('.ui.sidebar').sidebar('toggle')">
-                <i class="icon globe"></i>
-                Navigation
+            <a class="ui item borderless" onclick="$('.ui.sidebar').sidebar('toggle')">
+                <i class="icon content"></i>
+                Directory
             </a>
+
+            <div class="item borderless" style="padding: 0.5em">
+                <div class="ui search">
+                    <input id="search-input" class="prompt" type="text" placeholder="Search..." oninput="toggleSearch(event)">
+                    <div class="results"></div>
+                </div>
+            </div>
+            <div class="right menu">
+                <a class="item right borderless" href="/projects/">
+                    Projects
+                </a>
+                <a class="item right borderless" href="/experiments/">
+                    Experiments
+                </a>
+            </div>
+
+
+
         </div>
 
     </div>
-</div>
+
 <script>
 
     function toggleSearch(event) {
@@ -36,9 +42,23 @@
     }
 
     window.addEventListener("load", function () {
-        $('.ui.dropdown.nav').dropdown();
-    })
-</script>
-<div class="ui modal register">
+        $('.ui.search').search({
+            source:directory
+        });
+    });
 
-</div>
+
+    var directory = [
+        {
+            title:      "Soundcloud Downloader",
+            description:"Download Soundcloud songs by entering the url.",
+            url:        "/experiments/soundcloud/"
+        },
+        {
+            title:      "Task Tracker",
+            description:"If you need to take out the garbage, this is the link you want.",
+            url:        "/api/tasks/"
+        },
+    ]
+</script>
+

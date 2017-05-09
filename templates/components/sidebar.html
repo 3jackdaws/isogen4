@@ -5,57 +5,77 @@
             scrollLock:true,
             returnScroll:true
         });
+        $('.ui.left.accordion').accordion();
     });
 </script>
 
-<div class="ui right sidebar inverted vertical menu" style="padding-top: 50px; background: url('/static/img/sbar-noise2.png')">
-    <div class="item header borderless">
-        <i class=" icon cube"></i>
-        ISOGEN
+<div class="ui left sidebar inverted vertical accordion menu" style="padding-top: 50px; background: url('/static/img/sbar-noise2.png')">
+    <div class="item header">
+        Site Directory
     </div>
-    <a class="borderless item" href="/">
-        <i class="icon home"></i>
-        Home
-    </a>
-    <!-- EXPERIMENTS -->
-    <div class="item header" href="/experiments/">
-        <i class="left icon flask"></i>
-        Code Experiments
-    </div>
-    <a class="borderless sub item  " href="/experiments/terminal/">
-        <i class="left icon terminal"></i>
-        Terminal
-    </a>
-    <a class="borderless sub item  " href="/experiments/bad-design">
-        <i class="left icon keyboard"></i>
-        Bad Design
-    </a>
-    <a class="borderless sub item" href="/experiments/soundcloud">
-        <i class="icon music"></i>
-        Soundcloud Downloader
-    </a>
+    <div class="item">
+        <div class="title header inverted">
+            <i class="icon dropdown"></i>
+            <i class="icon star"></i>
+            Projects
+        </div>
+        <div class="content">
+            <a class="borderless item" href="https://github.com/3jackdaws/shinobu2">
+                <i class="icon chat"></i>
+                Shinobu ][
+            </a>
+            <a class="borderless item" href="https://github.com/NeonAesthetic/slingapp-net">
+                <i class="left icon rocket"></i>
+                Slingapp.net
+            </a>
+            <a class="borderless item" href="https://github.com/3jackdaws/RunawayRobot">
+                <i class="left icon bomb"></i>
+                Runaway Robot
+            </a>
+            <a class="borderless item" href="https://hub.docker.com/u/3jackdaws/">
+                <i class="left icon cubes"></i>
+                Docker
+            </a>
 
-    <!-- MISC -->
-    <div class="item header" href="/experiments/">
-        <i class="left icon question"></i>
-        Misc. Pages
+        </div>
     </div>
-    <a class="borderless sub item  " href="/api/tasks/">
-        <i class="left icon tasks"></i>
-        Task Tracker
-    </a>
-    <!-- OFF SITE -->
-    <div class="item header" href="">
-        <i class="left icon cubes"></i>
-        Affiliated Sites
+    <div class="item">
+        <div class="title header inverted">
+            <i class="icon dropdown"></i>
+            <i class="icon flask"></i>
+            Code Experiments
+        </div>
+        <div class="content">
+            <a class="borderless item" href="/experiments/soundcloud">
+                <i class="icon soundcloud"></i>
+                Soundcloud Downloader
+            </a>
+            <a class="borderless item" href="/api/tasks/">
+                <i class="left icon tasks"></i>
+                Task Tracker
+            </a>
+            <a class="borderless item" href="/experiments/snippets">
+                <i class="left icon keyboard"></i>
+                JS Snippets
+            </a>
+        </div>
     </div>
-    <a class="borderless sub item  " href="https://dev.slingapp.net">
-        <i class="icon tasks rocket"></i>
-        SLING
-    </a>
-    <a class="borderless sub item  " href="https://vobile.isogen.net">
-        <i class="icon tasks circle"></i>
-        Vobile URL Generator
-    </a>
+    <div class="item">
+        <div class="title header inverted">
+            <i class="icon dropdown"></i>
+            <i class="icon external"></i>
+            Links
+        </div>
+        <div class="content">
+            <a class="borderless item" href="https://cloud.isogen.net">
+                <i class="icon file"></i>
+                Files
+            </a>
+
+        </div>
+    </div>
+
+
+
 </div>
 <div class="pusher">

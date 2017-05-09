@@ -1,6 +1,8 @@
 from django.db.models import Model
 from django.db import models
 import datetime
+from urllib.request import Request, urlopen
+from urllib.parse import urlencode
 
 TASK_TYPES = (
         (0, "Rotating"),
@@ -50,3 +52,23 @@ class TaskCollection(Model):
 
     def __str__(self):
         return self.name
+
+DISCORD_BASE_API = "https://discordapp.com/api/webhooks/{}/{}"
+class DiscordWebhook(Model):
+    name = models.CharField(max_length=100)
+    avatar = models.URLField()
+    id = models.BigIntegerField(primary_key=True)
+    token = models.CharField(max_length=68)
+
+    def send(self, content):
+        params = {
+            "content": content,
+            "username": self.name
+        }
+        if self.avatar:
+            params['avatar_url'] = self.avatar
+        url = DISCORD_BASE_API.format(self.id, self.token)
+        request = Request(url, urlencode(params).encode('utf-8') if params else None)
+        request.add_header("User-Agent", "WebhookExecutor (http://isogen.net/, 1.0)")
+        site = urlopen(request)
+        return site.read().decode('utf-8')
