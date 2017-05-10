@@ -17,8 +17,12 @@ def index(request:HttpRequest):
     return HttpResponse(":^)")
 
 def feed(request:HttpRequest, num):
-    atom_feed = urlopen("https://github.com/3jackdaws/isogen4/commits/master.atom")
-    feed_dict = xmltodict.parse(atom_feed)
+    feed_dict = {}
+    if request.GET:
+        url = request.GET.get("url")
+        if url:
+            atom_feed = urlopen(url + "/commits/master.atom")
+            feed_dict = xmltodict.parse(atom_feed)
     return JsonResponse(feed_dict, json_dumps_params={"indent":2})
 
 @csrf_exempt

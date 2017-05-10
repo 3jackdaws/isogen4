@@ -5,6 +5,11 @@ from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from wsgiref.util import FileWrapper
 import os
+import misaka
+from pygments import highlight
+from pygments.formatters import ClassNotFound, HtmlFormatter
+from pygments.lexers import get_lexer_by_name
+
 
 def snippets(request):
     main_stylesheets = """
@@ -21,6 +26,13 @@ def snippets(request):
 
 
     return { "css_main":main_stylesheets, "js_main":main_js}
+
+
+def projects(request):
+    from apps.projects.models import Project
+    all_projects = Project.objects.all()
+
+    return { "projects":all_projects}
 
 
 def async_defer(sleep_for, task, *args, **kwargs):
@@ -81,3 +93,22 @@ def stream_resource(resource, name):
     response['Content-Disposition'] = 'attachment; filename=%s' % name
     print("sending dl2")
     return response
+
+def markdown_to_html(text):
+    renderer = HighlighterRenderer()
+    md = misaka.Markdown(renderer, extensions=('fenced-code',))
+    return md(text)
+
+class HighlighterRenderer(misaka.HtmlRenderer):
+    def blockcode(self, text, lang):
+        try:
+            lexer = get_lexer_by_name(lang, stripall=True)
+        except ClassNotFound:
+            lexer = None
+
+        if lexer:
+            formatter = HtmlFormatter()
+            return highlight(text, lexer, formatter)
+        # default
+        return '\n<pre><code>{}</code></pre>\n'.format(
+                            text.strip())

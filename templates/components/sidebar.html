@@ -20,22 +20,10 @@
             Projects
         </div>
         <div class="content">
-            <a class="borderless item" href="https://github.com/3jackdaws/shinobu2">
-                <i class="icon chat"></i>
-                Shinobu ][
-            </a>
-            <a class="borderless item" href="https://github.com/NeonAesthetic/slingapp-net">
-                <i class="left icon rocket"></i>
-                Slingapp.net
-            </a>
-            <a class="borderless item" href="https://github.com/3jackdaws/RunawayRobot">
-                <i class="left icon bomb"></i>
-                Runaway Robot
-            </a>
-            <a class="borderless item" href="https://hub.docker.com/u/3jackdaws/">
-                <i class="left icon cubes"></i>
-                Docker
-            </a>
+
+            {% for project in projects %}
+            <a class="borderless item" href="/projects/{{ project.short_name }}">{{ project.name }}</a>
+            {% endfor %}
 
         </div>
     </div>

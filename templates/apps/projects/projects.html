@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title>{{ project.name }}</title>
+    {{ css_main | safe }}
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet">
+    <script>
+        function ImageLoad(url, fadeDuration) {
+            document.write("<img src=\"" + url + "\" onload=\"fadeImage(this, " + fadeDuration + ")\">");
+        }
+
+        function fadeImage(element, fadeDuration) {
+            var container = element.parentNode;
+            container.style.backgroundImage = "url('" + element.src + "')";
+            container.style.opacity = 1;
+            container.style.transitionDuration = fadeDuration + "s";
+            container.removeChild(element);
+        }
+
+        function LastUpdated(repo){
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState == 4){
+                    var data = JSON.parse(xhr.responseText);
+                    var date = data.feed.entry[0].updated;
+                    date = new Date(date);
+                    var today = new Date();
+                    $('#last-updated').html(Math.round((today - date)/(1000*60*60*24)) + " days ago");
+                }
+            };
+            xhr.open("GET", "/api/feed/1?url="+ encodeURI(repo));
+            xhr.send();
+        }
+
+    </script>
+</head>
+<body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+
+
+<div class="ui grid project"
+     style="padding: 150px 0; display: flex; justify-content: space-around">
+    <div class="ui main container" style="background: white; ">
+
+        {% if project %}
+            <div class="ui loads-image" style="height: 400px; width: 100%;background: #666; margin-bottom: 30px;">
+                <script>ImageLoad('/static/media/{{ project.picture }}', 2)</script>
+            </div>
+            <div class="ui stackable vertically divided grid">
+                <div class="eight wide column" style="text-align: center">
+                    <h1 class="title">{{ project.name }}</h1>
+                    <div class="ui circular labels" style="text-align: center">
+                        <a class="ui tooltip" style="color: #222" href="{{ project.external_url }}"
+                           data-content="View on GitHub"><i class="icon big github"></i></a>
+                        {% for tech in project.technologies.all %}
+                            <a class="ui circular black label tooltip" data-content="{{ tech.short_description }}">
+                                {{ tech }}
+                            </a>
+
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="eight wide column" >
+
+                    <div class="ui tiny two statistics" style="padding: 15px 0">
+                        <div class="statistic">
+                            <div class="value">
+                                {{ project.start_date.date }}
+                            </div>
+                            <div class="label">
+                                Project Started
+                            </div>
+                        </div>
+                        <div class="statistic">
+                            <div class="value">
+                                {{ project.get_status }}
+                            </div>
+                            <div class="label">
+                                Development Status
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui tiny one statistics" >
+                        <div class="statistic">
+                            <div class="value" id="last-updated">
+                                <div class="ui active centered inline loader"></div>
+                            </div>
+                            <div class="label">
+                                Last Updated
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="ui horizontal divider"></div>
+                    <div class="sixteen wide column">
+
+                        <div class="ui container " style="font-size: larger">
+                            {{ project.get_html | safe}}
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        {% else %}
+            <h1 class="title">No projects</h1>
+
+        {% endif %}
+    </div>
+</div>
+
+
+</body>
+{{ js_main | safe }}
+<script>
+    window.addEventListener("load", function () {
+        $('.ui.tooltip').popup();
+        LastUpdated('{{ project.external_url }}');
+    })
+
+</script>

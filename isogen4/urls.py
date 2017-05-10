@@ -17,13 +17,15 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from isogen4 import views
 from django.contrib.staticfiles import views as sf
+from apps.projects.views import projects
 
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^portfolio/?$', views.portfolio),
-    url(r'^experiments/', include("apps.experiments.urls")),
+    url(r'^experiments/', include("apps.projects.urls")),
+    url(r'^projects/([a-z]+)/?', projects),
     url(r'^api/', include("apps.api.urls")),
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/?', admin.site.urls),
     url(r'.', views.error(404, "That page was not found")),
 
 

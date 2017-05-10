@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from apps.experiments import views
+from apps.projects import views
 
 urlpatterns = [
     url(r'^$', views.index),
@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^physics/?$', views.physics),
     url(r'^snippets/?$', views.bad_design),
     url(r'^soundcloud/?$', views.soundcloud),
+    url(r'^projects/([a-z]+)/?$', views.projects),
 ]
