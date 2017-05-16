@@ -29,10 +29,11 @@ def snippets(request):
 
 
 def projects(request):
-    from apps.projects.models import Project
+    from apps.projects.models import Project, Experiment
     all_projects = Project.objects.all()
+    all_experiments = Experiment.objects.all()
 
-    return { "projects":all_projects}
+    return { "projects":all_projects, "experiments":all_experiments}
 
 
 def async_defer(sleep_for, task, *args, **kwargs):

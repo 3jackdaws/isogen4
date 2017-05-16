@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^experiments/', include("apps.projects.urls")),
     url(r'^projects/([a-z]+)/?', projects),
     url(r'^api/', include("apps.api.urls")),
-    url(r'^admin/?', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'.', views.error(404, "That page was not found")),
 
 

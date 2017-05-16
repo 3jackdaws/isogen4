@@ -23,6 +23,7 @@ PROJECT_STATUS = [
 
 class Project(Model):
     name = models.CharField(max_length=64)
+    icon = models.CharField(max_length=32)
     short_description = models.CharField(max_length=400)
     short_name = models.CharField(max_length=32, unique=True)
     picture = models.ImageField()
@@ -47,3 +48,13 @@ class Project(Model):
 
     def get_html(self):
         return markdown_to_html(self.text)
+
+class Experiment(Model):
+    name = models.CharField(max_length=64)
+    icon = models.CharField(max_length=32)
+    short_description = models.CharField(max_length=400)
+    short_name = models.CharField(max_length=32, unique=True)
+    technologies = models.ManyToManyField(Technology, blank=True)
+
+    def __str__(self):
+        return self.name

@@ -2,15 +2,18 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.http.request import HttpRequest
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.template.context import RequestContext
 from urllib.request import urlopen
 import xmltodict
 import json
+import re
 from .models import TaskCompletion, Task, TaskCollection, Actor
 from isogen4.views import error
 from isogen4.util import send_file, stream_resource
 import apps.api.modules.sc as soundcloud
 import mutagen
 from apps.api.modules.dhook import DiscordWebhook
+from apps.projects.models import Project, Experiment
 
 def index(request:HttpRequest):
     context = {}
@@ -24,6 +27,42 @@ def feed(request:HttpRequest, num):
             atom_feed = urlopen(url + "/commits/master.atom")
             feed_dict = xmltodict.parse(atom_feed)
     return JsonResponse(feed_dict, json_dumps_params={"indent":2})
+
+def search(request:HttpRequest, query):
+    query=query.lower()
+    results = {
+        "results": {
+            "projects": {
+                "name": "Projects",
+                "results": []
+            },
+            "experiments": {
+                "name": "Experiments",
+                "results": []
+            }
+        }
+    }
+    for project in Project.objects.all():
+        tags = [str(x) for x in project.technologies.all()]
+        if query in project.name.lower() or query in project.short_description.lower() or query in " ".join(tags):
+            results['results']['projects']['results'].append({
+                "title":project.name,
+                "description":project.short_description,
+                "url":"/projects/" + project.short_name,
+                "tags":tags
+            })
+
+    for experiment in Experiment.objects.all():
+        tags = [str(x) for x in experiment.technologies.all()]
+        if query in experiment.name.lower() or query in experiment.short_description.lower() or query in " ".join(tags):
+            results['results']['experiments']['results'].append({
+                "title":experiment.name,
+                "description":experiment.short_description,
+                "url":"/experiments/" + experiment.short_name,
+                "tags":tags
+            })
+
+    return JsonResponse(results, json_dumps_params={"indent":2})
 
 @csrf_exempt
 def task_collection(request, identifier):

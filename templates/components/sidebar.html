@@ -22,7 +22,7 @@
         <div class="content">
 
             {% for project in projects %}
-            <a class="borderless item" href="/projects/{{ project.short_name }}">{{ project.name }}</a>
+            <a class="borderless item" href="/projects/{{ project.short_name }}">{{ project.name }}<i class="icon {{project.icon}}"></i></a>
             {% endfor %}
 
         </div>
@@ -34,18 +34,9 @@
             Code Experiments
         </div>
         <div class="content">
-            <a class="borderless item" href="/experiments/soundcloud">
-                <i class="icon soundcloud"></i>
-                Soundcloud Downloader
-            </a>
-            <a class="borderless item" href="/api/tasks/">
-                <i class="left icon tasks"></i>
-                Task Tracker
-            </a>
-            <a class="borderless item" href="/experiments/snippets">
-                <i class="left icon keyboard"></i>
-                JS Snippets
-            </a>
+            {% for experiment in experiments %}
+            <a class="borderless item" href="/experiments/{{ experiment.short_name }}">{{ experiment.name }}<i class="icon {{experiment.icon}}"></i></a>
+            {% endfor %}
         </div>
     </div>
     <div class="item">

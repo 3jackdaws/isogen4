@@ -7,7 +7,7 @@
             </a>
 
             <div class="item borderless" style="padding: 0.5em">
-                <div class="ui search" style="border-radius: 6px;">
+                <div class="ui category search" style="border-radius: 6px;">
                     <input id="search-input" class="prompt" type="text" placeholder="Search..." oninput="toggleSearch(event)">
                     <div class="results"></div>
                 </div>
@@ -43,22 +43,31 @@
 
     window.addEventListener("load", function () {
         $('.ui.search').search({
-            source:directory
+            type:'category',
+            apiSettings: {
+                url: '/api/search/{query}'
+            },
+            showNoResults:true
         });
     });
 
+    function formatApiSearch(response) {
+        $.each(response.results.projects.results, function (index, searchResult) {
+            if(searchResult.tags.length > 0){
+                searchResult.description += "<br>Tags: ";
+                $.each(searchResult.tags, function (index, tag) {
+                    searchResult.description += "<strong style='margin: 1px'>" + tag + "</strong>, ";
+                });
+                searchResult.description = searchResult.description.slice(0, -2);
+            }
 
-    var directory = [
-        {
-            title:      "Soundcloud Downloader",
-            description:"Download Soundcloud songs by entering the url.",
-            url:        "/experiments/soundcloud/"
-        },
-        {
-            title:      "Task Tracker",
-            description:"If you need to take out the garbage, this is the link you want.",
-            url:        "/api/tasks/"
-        },
-    ]
+        });
+        return response;
+    }
+
+
+
+
+
 </script>
 
