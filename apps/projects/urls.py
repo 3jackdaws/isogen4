@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from apps.projects import views
+from apps.api.views import task_collection
 
 urlpatterns = [
     url(r'^$', views.index),
@@ -23,5 +24,6 @@ urlpatterns = [
     url(r'^physics/?$', views.physics),
     url(r'^snippets/?$', views.bad_design),
     url(r'^soundcloud/?$', views.soundcloud),
+    url(r'^tasks/([a-z0-9]+)?', task_collection),
     url(r'^projects/([a-z]+)/?$', views.projects),
 ]

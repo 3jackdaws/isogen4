@@ -35,7 +35,7 @@
         </div>
         <div class="content">
             {% for experiment in experiments %}
-            <a class="borderless item" href="/experiments/{{ experiment.short_name }}">{{ experiment.name }}<i class="icon {{experiment.icon}}"></i></a>
+            <a class="borderless item" href="/experiments/{{ experiment.short_name }}/">{{ experiment.name }}<i class="icon {{experiment.icon}}"></i></a>
             {% endfor %}
         </div>
     </div>
