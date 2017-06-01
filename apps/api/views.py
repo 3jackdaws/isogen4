@@ -154,33 +154,11 @@ def sc_download(request):
 
     return JsonResponse({'error'}, json_dumps_params={'indent':2})
 
-def discord_webhook(request):
-    got_params = False
-    response = {}
-
-
-    if request.POST:
-        webhook_id = request.POST.get("id")
-        webhook_token = request.POST.get("token")
-        content = request.POST.get("content")
-        name = request.POST.get("name")
-        if content and webhook_url:
-            got_params = True
-
-    if content:
-        try:
-            url = "https://discordapp.com/api/webhooks/" + webhook_id + "/" + webhook_token
-            print("url")
-            print("url")
-            webhook = DiscordWebhook(url)
-            webhook.send(content)
-            response = {
-                "success":True
-            }
-        except Exception as e:
-            print(e)
-            response = {
-                "error":"Invalid Webhook URI"
-            }
-
-    return JsonResponse(response, json_dumps_params={"indent":2})
+def github_repo(request, user):
+    feed_dict = {}
+    if request.GET:
+        url = request.GET.get("url")
+        if url:
+            atom_feed = urlopen(url + "/commits/master.atom")
+            feed_dict = xmltodict.parse(atom_feed)
+    return JsonResponse(feed_dict, json_dumps_params={"indent": 2})

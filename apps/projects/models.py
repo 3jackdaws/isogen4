@@ -7,9 +7,25 @@ class Technology(Model):
     name = models.CharField(max_length=32)
     short_description = models.CharField(max_length=400)
     external_url = models.URLField()
+    is_language = models.BooleanField()
+    color = models.CharField(max_length=16, choices=(
+        ("red", "red"),
+        ("yellow", "yellow"),
+        ("orange", "orange"),
+        ("blue", "blue"),
+        ("black", "black"),
+        ("grey", "grey"),
+        ("teal", "teal"),
+        ("purple", "purple"),
+        ("violet", "violet"),
+        ("olive", "olive"),
+        ("pink", "pink"),
+        ("brown","brown")
+    ))
 
     def __str__(self):
         return self.name
+
 
 PROJECT_STATUS = [
     "Active",
@@ -29,12 +45,12 @@ class Project(Model):
     picture = models.ImageField()
     start_date = models.DateTimeField()
     status = models.IntegerField(choices=(
-        (0,"Active"),
-        (1,"In Progress"),
-        (2,"Postponed"),
-        (3,"Deferred"),
-        (4,"Hope to Revisit"),
-        (5,"Abandoned"),
+        (0, "Active"),
+        (1, "In Progress"),
+        (2, "Postponed"),
+        (3, "Deferred"),
+        (4, "Hope to Revisit"),
+        (5, "Abandoned"),
     ))
     text = models.TextField()
     technologies = models.ManyToManyField(Technology, blank=True)
@@ -48,6 +64,11 @@ class Project(Model):
 
     def get_html(self):
         return markdown_to_html(self.text)
+
+    def language(self):
+        lang = [x for x in self.technologies.all() if x.is_language]
+        return lang if len(lang) > 0 else None
+
 
 class Experiment(Model):
     name = models.CharField(max_length=64)

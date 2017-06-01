@@ -1,19 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <meta charset="UTF-8">
     <title></title>
     {{ css_main | safe}}
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <style>
+        .pusher{
+            background-color: whitesmoke !important;
+        }
+    </style>
+    <script>
+
+    </script>
 </head>
 <body>
-    <div class="ui grid">
-        {% include 'components/navbar.html' %}
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+<div class="ui container" style="padding: 80px 0; ">
+    <div class="ui stackable relaxed grid">
+        <div class="five wide column" >
+            <div class="profile-panel" style="padding-bottom: -100px;">
+                <div class="profile-section section-diagonal" style="margin-top: 0;">
+                    <div class="ui image rounded headshot">
+                        <img src="/static/img/me.jpg">
+                    </div>
+                    <h1 class="raleway text-center">Ian Murphy</h1>
+                    <div class="ui fluid search skills">
+                       <input class="prompt" style="width: 100%" type="text" placeholder="Search skills..." oninput="clearFilter(this)">
 
+                        <div class="results"></div>
+                    </div>
+                </div>
+
+
+                <div class="profile-section section-diagonal" style="background-color: #fbfbfb">
+                    <div class="ui accordion">
+                        <div class="title active">
+
+                            <h3 class="raleway"><i class="dropdown icon"></i>Education</h3>
+                        </div>
+                        <div class="content active" >
+                            <p>
+                                <strong>Oregon Institute of Technology</strong><p>Bachelor of Science <br>Software Engineering Technology<br>Graduation Date: 2019
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section section-diagonal" style="background-color: #bbeedd; ">
+                    <div class="ui accordion">
+                        <div class="title active">
+                            <h3 class="raleway grey"><i class="dropdown icon"></i>General Skills</h3>
+                        </div>
+                        <div class="content active">
+                            <div class="ui bulleted list" style="padding-left: 0.5rem;">
+                                <div class="item">Technical Writing</div>
+                                <div class="item">Group Communication</div>
+                                <div class="item">Critical Thinking</div>
+                                <div class="item">Agile Development</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="profile-section section-diagonal" style="background-color: #fbfbfb">
+                    <div class="ui accordion">
+                        <div class="title active">
+                            <h3 class="raleway grey"><i class="dropdown icon"></i>Known Languages</h3>
+                        </div>
+                        <div class="content active">
+                            <div class="ui bulleted list" style="padding-left: 0.5rem">
+                                <div class="item">Python</div>
+                                <div class="item">PHP</div>
+                                <div class="item">JavaScript</div>
+                                <div class="item">Java</div>
+                                <div class="item">C++</div>
+                                <div class="item">C</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-section section-diagonal" style="background-color: #bbeedd;">
+                    <div class="ui accordion">
+                        <div class="title active">
+                            <h3 class="raleway grey"><i class="dropdown icon"></i>Known Technologies</h3>
+                        </div>
+                        <div class="content active">
+                            <div class="ui bulleted list" style="padding-left: 0.5rem">
+                                <div class="item">Apache 2</div>
+                                <div class="item">Bootstrap 3</div>
+                                <div class="item">CSS</div>
+                                <div class="item">Django</div>
+                                <div class="item">Docker</div>
+                                <div class="item">Docker Compose</div>
+                                <div class="item">Dovecot</div>
+                                <div class="item">Git</div>
+                                <div class="item">HTML 5</div>
+                                <div class="item">jQuery</div>
+                                <div class="item">Postfix</div>
+                                <div class="item">WebSockets</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="eleven wide column">
+            <div id='repos' class="profile-panel" style="min-height: 60vh; padding: 20px; background-color: white">
+
+
+                        <div class="ui center aligned basic segment">
+                            <h1 class="raleway experience-title">Experience: </h1>
+                        </div>
+
+
+
+                        <a class="ui experience segment" tech="" href="" target="_blank">
+
+                            <div class="float left">
+                                <span class="raleway title" style="font-size: 2em"></span>
+                                <br>
+                                <span class="raleway language"></span>
+                            </div>
+                            <div class="view-on-github">
+                                <i class="icon large chevron right"></i>
+                                <h5>GITHUB</h5>
+
+                            </div>
+                        </a>
+
+
+
+
+
+
+            </div>
+        </div>
     </div>
+
+
+
+
+</div>
+
 </body>
 {{ js_main | safe}}
 <script>
+    window.addEventListener("load", function () {
 
+        getRepositories("3jackdaws");
+
+        var searchable = [];
+        $('.profile-section .item').each(function (i, item) {
+            searchable.push({
+                title:item.innerHTML,
+                item:item
+            });
+        });
+
+        $('.ui.accordion').accordion();
+
+        $('.ui.search.skills').search({
+            source:searchable,
+            onSelect:function (result, response) {
+                $parent = $(result.item).closest(".accordion");
+                $(".accordion").accordion('close', 0);
+                console.log($parent);
+                setTimeout(function () {
+                    $parent.accordion('open', 0);
+                    $('html, body').animate({
+                        scrollTop: $(result.item).offset().top - 60
+                    }, 1000, null, function () {
+
+                    });
+                    $('.experience.segment').each(function (i, segment) {
+                        var tech = segment.getAttribute("tech").toLowerCase().split("|");
+                        var title = result.title.toLowerCase();
+                        $('.experience-title').html("Experience with " + result.title + ":");
+                        console.log(tech, title, tech.indexOf(title));
+                        if (tech.indexOf(title) != -1){
+                            segment.classList.remove("segment-hidden");
+                        }else{
+                            segment.classList.add("segment-hidden");
+                        }
+                    })
+                }, 500);
+            }
+        });
+    });
+
+    function clearFilter(input){
+        if(input.value.length > 0) return;
+        $('.experience.segment').each(function (i, segment) {
+            $('.experience-title').html("All Experience:");
+
+            segment.classList.remove("segment-hidden");
+        });
+    }
+
+    function getRepositories(username){
+        var baseNode = $('.ui.experience.segment')[0].cloneNode(true);
+        $('.ui.experience.segment').remove();
+        var apiBase = "https://api.github.com/users/";
+        $.get(apiBase + username + "/repos?sort=pushed", function (data) {
+            data.forEach(function(repo){
+                console.log(repo);
+                var $node = $(baseNode.cloneNode(true));
+                $node.attr("href", repo.);
+                var languageURL = repo.languages_url;
+                $.get(languageURL, function (data) {
+                    var langString = "";
+                    for(var lang in data) {
+                        langString+=(lang + "|");
+                    }
+                    $node.attr("tech", langString);
+                });
+                $node.find('.title').html(repo.name);
+                $node.find('.language').html(repo.language);
+                $('#repos').append($node);
+            })
+        })
+
+    }
 </script>
-
 </html>

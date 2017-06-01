@@ -21,7 +21,7 @@ from apps.projects.views import projects
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^portfolio/?$', views.portfolio),
+    url(r'^ian/?$', views.portfolio),
     url(r'^experiments/', include("apps.projects.urls")),
     url(r'^projects/([a-z]+)/?', projects),
     url(r'^api/', include("apps.api.urls")),
