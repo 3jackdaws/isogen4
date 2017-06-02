@@ -72,3 +72,4 @@ class DiscordWebhook(Model):
         request.add_header("User-Agent", "WebhookExecutor (http://isogen.net/, 1.0)")
         site = urlopen(request)
         return site.read().decode('utf-8')
+

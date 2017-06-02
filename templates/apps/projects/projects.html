@@ -9,6 +9,7 @@
     <script>
         function ImageLoad(url, fadeDuration) {
             document.write("<img src=\"" + url + "\" onload=\"fadeImage(this, " + fadeDuration + ")\">");
+            console.warn("No u");
         }
 
         function fadeImage(element, fadeDuration) {

@@ -9,6 +9,7 @@ import misaka
 from pygments import highlight
 from pygments.formatters import ClassNotFound, HtmlFormatter
 from pygments.lexers import get_lexer_by_name
+from urllib.request import urlopen, Request
 
 
 def snippets(request):
@@ -113,3 +114,7 @@ class HighlighterRenderer(misaka.HtmlRenderer):
         # default
         return '\n<pre><code>{}</code></pre>\n'.format(
                             text.strip())
+
+
+def response_cache(request:Request):
+    pass

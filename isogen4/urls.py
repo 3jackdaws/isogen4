@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from isogen4 import views
-from django.contrib.staticfiles import views as sf
 from apps.projects.views import projects
 
 urlpatterns = [
@@ -26,8 +25,7 @@ urlpatterns = [
     url(r'^projects/([a-z]+)/?', projects),
     url(r'^api/', include("apps.api.urls")),
     url(r'^admin/', admin.site.urls),
+    url(r'^static/([\s\S]+)', views.static),
     url(r'.', views.error(404, "That page was not found")),
-
-
-
 ]
+

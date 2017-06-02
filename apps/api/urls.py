@@ -24,8 +24,8 @@ urlpatterns = [
     url(r'^tasks/([a-z0-9]+)?', views.task_collection),
     url(r'^soundcloud/info/?', views.sc_info),
     url(r'^soundcloud/?', views.sc_download),
-    url(r'^discord-webhook/?', views.discord_webhook),
     url(r'^users/([a-z0-9A-Z]+)/repos', views.github_repo),
+    url(r'^cache', views.cache),
 
 
 

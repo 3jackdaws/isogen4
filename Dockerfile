@@ -1,21 +1,15 @@
 FROM 	python:latest
-RUN 	apt-get update
-RUN 	apt-get install -y apache2 libapache2-mod-wsgi-py3 python3-pip
 
-RUN 	python3.4 -m pip install django pymysql pillow
+RUN 	pip3 install django pymysql pillow gunicorn misaka pygments xmltodict mutagen redis
 
 WORKDIR /var/www
 RUN mkdir isogen
 COPY . isogen/
 
 VOLUME /var/www/isogen
-WORKDIR /etc/apache2/sites-enabled
-RUN pwd
-RUN rm -f *
-COPY isogen.conf .
+VOLUME /var/www/isogen/static
+
 WORKDIR /var/www/isogen
 
-EXPOSE 80
-EXPOSE 443
 
-ENTRYPOINT bash -c "service apache2 restart; bash"
+CMD ["gunicorn", "-b", "0.0.0.0:80","isogen4.wsgi"]

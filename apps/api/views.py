@@ -3,7 +3,7 @@ from django.http.request import HttpRequest
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context import RequestContext
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 import xmltodict
 import json
 import re
@@ -14,6 +14,7 @@ import apps.api.modules.sc as soundcloud
 import mutagen
 from apps.api.modules.dhook import DiscordWebhook
 from apps.projects.models import Project, Experiment
+from apps.api import utils as api_utils
 
 def index(request:HttpRequest):
     context = {}
@@ -117,21 +118,6 @@ def sc_info(request):
 
     return JsonResponse({'error'}, json_dumps_params={'indent':2})
 
-# def sc_download(request):
-#     if request.GET:
-#         url = request.GET.get('url')
-#         if url:
-#             track = soundcloud.resolve(url)
-#             stream = soundcloud.get_stream_as_resource(track)
-#             filename = track['title'] + ".mp3"
-#
-#             return stream_resource(stream, filename)
-#
-#     return JsonResponse({'error'}, json_dumps_params={'indent':2})
-
-
-
-
 def sc_download(request):
     if request.GET:
         url = request.GET.get('url')
@@ -155,10 +141,21 @@ def sc_download(request):
     return JsonResponse({'error'}, json_dumps_params={'indent':2})
 
 def github_repo(request, user):
-    feed_dict = {}
+    api_request = Request("https://api.github.com/users/" + user + "/repos?sort=pushed")
+    response = api_utils.api_cache(api_request)
+    obj = json.loads(response)
+    return JsonResponse(obj, json_dumps_params={"indent": 2}, safe=False)
+
+def cache(request):
+    response = "{}"
+    content_type = 'application/json'
     if request.GET:
-        url = request.GET.get("url")
+        url = request.GET['url']
         if url:
-            atom_feed = urlopen(url + "/commits/master.atom")
-            feed_dict = xmltodict.parse(atom_feed)
-    return JsonResponse(feed_dict, json_dumps_params={"indent": 2})
+            req = Request(url)
+            response = api_utils.api_cache(req)
+            try:
+                json.loads(response)
+            except:
+                content_type = "text/plain"
+    return HttpResponse(response, content_type=content_type)
