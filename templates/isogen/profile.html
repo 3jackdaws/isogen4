@@ -28,13 +28,10 @@
                     </div>
                     <h1 class="raleway text-center">Ian Murphy</h1>
                     <div class="ui fluid search skills">
-                       <input class="prompt" style="width: 100%" type="text" placeholder="Search skills..." oninput="clearFilter(this)">
-
+                        <input class="prompt" style="width: 100%" type="text" placeholder="Search this section..." oninput="clearFilter(this)">
                         <div class="results"></div>
                     </div>
                 </div>
-
-
                 <div class="profile-section section-diagonal" style="background-color: #fbfbfb">
                     <div class="ui accordion">
                         <div class="title active">
@@ -182,26 +179,25 @@
     function getRepositories(username){
         var baseNode = $('.ui.experience.segment')[0].cloneNode(true);
         $('.ui.experience.segment').remove();
-        var apiBase = "https://api.github.com/users/";
-        var url = apiBase + username + "/repos?sort=pushed";
+
         $.get("/api/users/"+username+"/repos", function (data) {
             data.forEach(function(repo){
                 var $node = $(baseNode.cloneNode(true));
                 $node.attr("href", repo.html_url);
-                var languageURL = repo.languages_url;
-                $.get("/api/cache?url="+languageURL, function (data) {
-                    var langString = "";
-                    var linesOfCode = 0;
-                    for(var lang in data){
-                        if(data.hasOwnProperty(lang)){
-                            langString += lang + "|";
-                            linesOfCode += data[lang];
-                        }
+
+                var langString = "";
+                var linesOfCode = 0;
+                for(var lang in repo.technologies){
+                    if(repo.technologies.hasOwnProperty(lang)){
+                        langString += lang + "|";
+                        linesOfCode += repo[lang];
                     }
-                    langString = langString.slice(0,-1);
-                    $node.attr("tech", langString);
-                    $node.find('.language').html(langString.split("|").join(" &middot; "));
-                });
+                }
+                console.log(langString);
+                langString = langString.slice(0,-1);
+                $node.attr("tech", langString);
+                $node.find('.language').html(langString.split("|").join(" &middot; "));
+
                 $node.find('.title').html(repo.name);
 
                 $('#repos').append($node);

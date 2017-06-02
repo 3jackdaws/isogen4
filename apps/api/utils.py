@@ -32,3 +32,10 @@ def github_request(url, exp_time=3600):
     req.add_header('Authorization', 'token {}'.format(GITHUB_ACCESS_TOKEN))
     response = api_cache(req)
     return response
+
+def get_repo_json(url):
+    import json
+    repos = json.loads(github_request(url))
+    for repo in repos:
+        repo['technologies'] = json.loads(github_request(repo['languages_url']))
+    return repos

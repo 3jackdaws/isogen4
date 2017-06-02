@@ -141,10 +141,8 @@ def sc_download(request):
     return JsonResponse({'error'}, json_dumps_params={'indent':2})
 
 def github_repo(request, user):
-    api_request = Request("https://api.github.com/users/" + user + "/repos?sort=pushed")
-    response = api_utils.api_cache(api_request)
-    obj = json.loads(response)
-    return JsonResponse(obj, json_dumps_params={"indent": 2}, safe=False)
+    repo = api_utils.get_repo_json("https://api.github.com/users/" + user + "/repos?sort=pushed")
+    return JsonResponse(repo, json_dumps_params={"indent": 2}, safe=False)
 
 def cache(request):
     response = "{}"
