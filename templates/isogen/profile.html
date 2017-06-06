@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <meta charset="UTF-8">
-    <title></title>
+    <title>About Me | isogen.net</title>
     {{ css_main | safe}}
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <style>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="content active" >
                             <p>
-                                <strong>Oregon Institute of Technology</strong><p>Bachelor of Science <br>Software Engineering Technology<br>Graduation Date: 2019
+                                <strong>Software Engineering Technology</strong><p>Bachelor of Science <br>Oregon Institute of Technology<br>Graduation Date: 2019
                             </p>
                         </div>
                     </div>
@@ -74,6 +74,7 @@
                                 <div class="item">PHP</div>
                                 <div class="item">JavaScript</div>
                                 <div class="item">Java</div>
+                                <div class="item">SQL</div>
                                 <div class="item">C++</div>
                                 <div class="item">C</div>
                             </div>
@@ -98,6 +99,7 @@
                                 <div class="item">HTML 5</div>
                                 <div class="item">jQuery</div>
                                 <div class="item">Postfix</div>
+                                <div class="item">MySQL</div>
                                 <div class="item">WebSockets</div>
                             </div>
                         </div>
@@ -113,17 +115,19 @@
                 <div class="ui input" style="width:100%">
                     <input style="width: 50%" type="text" placeholder="Filter by name or language." oninput="filterRepos(this)">
                 </div>
-                <a class="ui experience segment" tech="" href="" target="_blank">
-                    <div class="float left">
-                        <span class="raleway title" style="font-size: 1.5em"></span>
-                        <br>
+                <a class="ui experience segment" tech="" href="">
+                    <div class="float left" style="margin-right: 100px">
+                        <span class="raleway name" style="font-size: 1.5em; margin-right: 10px;"></span>
                         <span class="raleway language"></span>
+                        <br>
+                        <span class="raleway description"></span>
                     </div>
                     <div class="view-on-github">
                         <i class="icon large chevron right"></i>
-                        <h5>GITHUB</h5>
+                        <h5>DETAILS</h5>
                     </div>
                 </a>
+
             </div>
         </div>
     </div>
@@ -159,9 +163,8 @@
                 setTimeout(function () {
                     $parent.accordion('open', 0);
                     $('html, body').animate({
-                        scrollTop: $(result.item).offset().top - 60
+                        scrollTop: $(result.item).offset().top - 200
                     }, 1000);
-
                 }, 500);
             }
         });
@@ -182,9 +185,9 @@
 
         $.get("/api/users/"+username+"/repos", function (data) {
             data.forEach(function(repo){
+                console.log(repo);
                 var $node = $(baseNode.cloneNode(true));
-                $node.attr("href", repo.html_url);
-
+                $node.attr("href", "/repos/" + repo.full_name);
                 var langString = "";
                 var linesOfCode = 0;
                 for(var lang in repo.technologies){
@@ -193,14 +196,20 @@
                         linesOfCode += repo[lang];
                     }
                 }
-                console.log(langString);
                 langString = langString.slice(0,-1);
                 $node.attr("tech", langString);
-                $node.find('.language').html(langString.split("|").join(" &middot; "));
+                var langDiv = $node.find('.language')[0];
+                langString.split("|").forEach(function (lang) {
+                    langDiv.innerHTML += "<div class='ui tiny label basic'>" + lang + "</div>";
+                });
 
-                $node.find('.title').html(repo.name);
+
+                $node.find('.name').html(repo.name);
+                $node.find('.description').html(repo.description);
+
 
                 $('#repos').append($node);
+
             })
         })
 
@@ -210,7 +219,7 @@
         var filterValue = input.value;
         if(filterValue.length > 0){
             $('.experience.segment').each(function (i, segment) {
-                var segmentAttributes = segment.getAttribute("tech").toLowerCase() + $(segment).find('.title')[0].innerHTML.toLowerCase();
+                var segmentAttributes = segment.getAttribute("tech").toLowerCase() + $(segment).find('.name')[0].innerHTML.toLowerCase();
                 var title = filterValue.toLowerCase();
 
                 if (segmentAttributes.indexOf(title) != -1){

@@ -4,5 +4,7 @@ services:
     build: .
     ports:
      - "80:80"
+    volumes:
+     - .:/var/www/isogen
   redis:
     image: "redis:alpine"

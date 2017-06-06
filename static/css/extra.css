@@ -219,7 +219,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
     display: block;
     color: #222;
-    padding-right: 100px;
+    min-height: 100px;
 }
 
 .experience.segment:hover{
@@ -233,17 +233,21 @@ input[type="range"]::-webkit-slider-thumb {
 
 }
 
+.experience .language{
+    color: #6b7070;
+    font-weight: bold;
+}
+
 .view-on-github{
     right: 0;
     top: 0;
     text-align: center;
-    position: relative;
+    position: absolute;
     height: 100%;
     width: 100px;
-    background-color: whitesmoke;
     padding: 10px;
     color: #999;
-
+    background-color: #eee;
     display: flex;
     align-items: center;
     justify-content: space-around;

@@ -25,5 +25,9 @@ def static(request, path):
         content_type = "text/css"
     filename = STATIC_ROOT + path
     text = file_cache(filename)
+    print("Serving staticfile: [%s]" % filename)
     response = HttpResponse(text, content_type=content_type)
     return response
+
+def repos(request, user, repo):
+    return HttpResponseRedirect("https://github.com/"+user+"/"+repo)

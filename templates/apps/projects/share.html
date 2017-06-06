@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    {{ css_main | safe}}
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <style>
+        .pusher{
+            background-color: whitesmoke !important;
+        }
+    </style>
+
+</head>
+<body>
+{% include 'components/navbar.html' %}
+{% include 'components/sidebar.html' %}
+<div class="ui container" style="padding: 80px 0; ">
+    <div class="ui stackable relaxed grid">
+        <div class="ui container" style="background-color: white; padding: 20px; position: relative; ">
+            <div class="ui input " style="right: 0;">
+                <input id="peer-name" type="text" placeholder="Peer name">
+                <button class="ui button blue" onclick="connectToPeer()">Connect</button>
+                <button class="ui button blue" onclick="startScreenShare()">Share Screen</button>
+            </div>
+            <div class="connected-to">
+                Connected to:
+            </div>
+            <video style="width: 100%; height: auto" ></video>
+        </div>
+    </div>
+</div>
+
+</body>
+{{ js_main | safe}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.js"></script>
+<script>
+    window.addEventListener("load", function () {
+
+    });
+    var PeerID = "{{ peer_id }}";
+    var peer = new Peer(PeerID, {key:'kl1rdmpdh6geewmi'});
+    var data = null;
+    peer.on('open', function(id) {
+        console.info("Connected as: ",id);
+    });
+    peer.on("connection", function (dataConnection) {
+        data = dataConnection;
+        console.info("Accepted connection from: ", data.peer);
+        $('.connected-to').html("Connected to: " + data.peer)
+    });
+    
+    peer.on('call', function (call) {
+        call.answer(null);
+        call.on("stream", function (stream) {
+            console.info("Recieved peer stream");
+            $video = $('video');
+            $video[0].srcObject = stream;
+            $video[0].autoplay = true;
+        });
+    });
+
+    function connectToPeer(){
+        var peerName = document.getElementById('peer-name').value;
+        data = peer.connect(peerName, {serialization:'json', reliable:true});
+        data.on('open', function () {
+            console.info("Connected to peer: ", data.peer);
+            $('.connected-to').html("Connected to: " + data.peer);
+        });
+    }
+
+    function startScreenShare(){
+        var extensionID = "kfgaafajpkopkaljlblgmijmedhcbhkm";
+        chrome.runtime.sendMessage(extensionID, {text: "wew lad"}, function(response) {
+            console.log(response);
+            if(response){
+                var options = MEDIA.SCREEN;
+                options.video.mandatory.chromeMediaSourceId = response.media_id;
+                getUserMedia(options, function(stream){
+                    peer.call(data.peer, stream);
+                });
+            }else{
+                alert("Plugin not found");
+            }
+        });
+    }
+
+    var MEDIA = {
+        AUDIO  : {audio: true, video:false},
+        VIDEO  : {audio: false, video:true},
+        BOTH   : {audio: true, video:true},
+        SCREEN : {
+            audio: false,
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: null,
+                    minWidth: 1280,
+                    maxWidth: 1920,
+                    minHeight: 720,
+                    maxHeight: 1080,
+                    minFrameRate:60,
+                    maxFrameRate:60
+                }
+            },
+            options:[]
+        }
+    };
+
+    function getUserMedia(mediaType, callback){
+        if(!callback){
+            console.error("Must provide a callback function in AVC.getUserMedia");
+            return false;
+        }
+
+        navigator.webkitGetUserMedia(mediaType, function(stream){
+            callback(stream);
+        }, function (error) {
+            console.error("IT's BORKED: ", error);
+        })
+    }
+</script>
+</html>

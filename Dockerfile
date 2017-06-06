@@ -7,7 +7,6 @@ RUN mkdir isogen
 COPY . isogen/
 
 VOLUME /var/www/isogen
-VOLUME /var/www/isogen/static
 
 WORKDIR /var/www/isogen
 

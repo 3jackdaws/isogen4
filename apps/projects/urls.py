@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^soundcloud/?$', views.soundcloud),
     url(r'^tasks/([a-z0-9]+)?', task_collection),
     url(r'^projects/([a-z]+)/?$', views.projects),
+    url(r'^share$', views.share),
 ]

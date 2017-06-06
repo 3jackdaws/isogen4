@@ -8,7 +8,7 @@
 
             <div class="item borderless" style="padding: 0.5em">
                 <div class="ui category search directory" style="border-radius: 6px;">
-                    <input id="search-input" class="prompt" type="text" placeholder="Search..." oninput="toggleSearch(event)">
+                    <input id="search-input" class="prompt" type="text" placeholder="Search..." oninput="toggleSearch(event)" oncontextmenu="this.value='';event.preventDefault()">
                     <div class="results"></div>
                 </div>
             </div>
